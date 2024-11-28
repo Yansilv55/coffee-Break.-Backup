@@ -1,0 +1,829 @@
+.modal-container {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-container .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+
+
+/* Estilo global do corpo da página */
+body {
+    font-family: Arial, sans-serif; 
+    background-color: #92dbfd; 
+    margin: 0; 
+    padding: 0; 
+}
+
+/* Estilo do cabeçalho da página */
+header {
+    width: 100%;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 10px 15px; 
+    background-color: #243a5c; 
+    color: white; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+header h1 {
+    font-size: 1.5em; 
+    margin: 0; 
+    flex: 1;
+    text-align: center; 
+}
+
+/* Estilo do botão para alternar o menu */
+.menu-toggle, .menu-toggle-close {
+    font-size: 30px; 
+    background: none; 
+    border: none; 
+    color: white; 
+    cursor: pointer; 
+}
+
+.menu-toggle-close {
+    padding-top: 0; /* Removi a porcentagem para evitar deslocamento */
+    margin-left: 0px;
+    color: white;
+    position: absolute; /* Posicionamento absoluto para fixar no topo */
+    top: 10px; /* Distância do topo da página */
+    left: 15px; /* Distância da lateral esquerda */
+    z-index: 1000; 
+    
+}
+
+/* Estilo da barra de pesquisa */
+#searchBar {
+    width: 100%; 
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 16px;
+}
+
+/* Estilo da notificação de sucesso */
+.notification {
+    position: fixed; 
+    top: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; 
+    font-size: 1em;
+    z-index: 1000;
+}
+
+/* Estilo do menu lateral */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #243a5c;
+    padding-top: 60px;
+    transform: translateX(-350px); 
+    transition: transform 0.3s ease; 
+    z-index: 2000;
+}
+
+.side-menu.open {
+    transform: translateX(0);
+}
+
+/* Estilo da lista do menu lateral */
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu ul li {
+    padding: 15px;
+    text-align: left;
+}
+
+.side-menu ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.side-menu ul li a:hover {
+    background-color: #3661ee;
+    border-radius: 5px;
+}
+
+/* Estilo do conteúdo principal */
+.main-content {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 80px;
+}
+
+/* Estilo de seções */
+section {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+section.active {
+    display: block;
+}
+
+/* Responsividade para telas maiores que 768px */
+@media (min-width: 768px) {
+    .main-content {
+        width: 80%;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        margin-top: 80px;
+    }
+
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    .side-menu {
+        width: 300px;
+    }
+}
+
+/* Responsividade para telas menores que 768px */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 10px;
+        margin-top: 60px;
+    }
+
+    section {
+        width: 100%;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    header h1 {
+        font-size: 1.2em;
+    }
+}
+
+/* Estilo de tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Estilo do botão */
+.button-coffe {
+    background-color: #271ae2;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.button-coffe:hover {
+    background-color: #042594;
+}
+
+/* Estilo do carrinho */
+.carrinho-certo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Estilo de botão no carrinho */
+.button-coffe {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, transform 0.3s;
+}
+
+/* Efeito hover do botão no carrinho */
+.button-coffe:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Botão de retorno ao carrinho */
+#backToCartButton {
+    background-color: #243a5c;
+    color: white;
+    margin-top: 10px;
+}
+
+#backToCartButton:hover {
+    background-color: #1b2e47;
+}
+
+/* Estilo do botão "Sair" no menu lateral */
+#logoutButton {
+    background-color: #0e004b;
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    bottom: 20px; 
+    position: bottom;
+    margin-top: 710px;
+    border: 1px solid;
+    border-color: black;
+}
+
+
+
+
+/* Efeito ao passar o mouse sobre o botão "Sair" */
+#logoutButton:hover {
+    background-color: #090031; 
+}
+
+/* Responsividade para tabelas em telas pequenas */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.2em;
+    }
+
+    .main-content, section {
+        padding: 10px;
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    table tbody tr td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table tbody tr td:last-child {
+        border-bottom: none; 
+    }
+
+    /* Exibe o título da coluna antes do valor */
+    table tbody tr td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        width: 50%;
+    }
+
+    input[type="number"],
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 5px;
+    }
+
+    .button-coffe {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+    }
+}
+
+
+
+
+
+
+
+/* Estilo da grid do carrinho */
+#cartTable {
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+}
+
+#cartTable th,
+#cartTable td {
+    border: 1px solid #ddd; 
+    padding: 8px; 
+    text-align: left; 
+}
+
+#cartTable th {
+    background-color: #f2f2f2;
+    font-weight: bold; 
+}
+#cartTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Estilo para a tabela em telas pequenas */
+@media (max-width: 600px) {
+    #cartTable,
+    #cartTable thead,
+    #cartTable tbody,
+    #cartTable th,
+    #cartTable td,
+    #cartTable tr {
+        display: grid; 
+
+    }
+
+    #cartTable thead {
+        display: none; 
+    }
+
+    #cartTable tr {
+        margin-bottom: 15px; 
+        border: 1px solid #ddd;
+    }
+
+    #cartTable td {
+        text-align: right;
+        position: relative; 
+        padding-left: 50%; 
+    }
+
+    #cartTable td::before {
+        position: absolute;
+        left: 10px; 
+        width: 50%; 
+        padding-right: 10px; 
+        white-space: nowrap; 
+        text-align: left; 
+    }
+
+    #cartTable td:nth-of-type(1)::before { content: "Descrição:"; }
+    #cartTable td:nth-of-type(2)::before { content: "Quantidade:"; }
+    #cartTable td:nth-of-type(3)::before { content: "Unidade de Medida:"; }
+}
+
+
+
+.item-card label {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .item-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+
+/*
+
+.user-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+ 
+}*/
+
+/* Estilos da seção de cadastro */
+/*.cadastro-usuarios {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 450px;
+    margin: 0 auto;
+}
+
+.cadastro-usuarios h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}*/
+
+/* Estilo do botão */
+/*.button-coffe {
+    background-color: #271ae2;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.button-coffe:hover {
+    background-color: #042594;
+}
+
+/* Responsividade para dispositivos móveis */
+/*@media (max-width: 768px) {
+    .cadastro-usuarios {
+        padding: 15px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #333;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+.close-button:hover {
+    color: #f00; 
+}*/
+
+/* Tela de login*/
+
+.login-corpo{
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #92dbfd;
+    
+}
+
+.menu{
+    width: 550px;
+    height: 600px;
+    border-radius: 20px;
+    background-color: #007BFF;
+    color: white;
+    margin-top: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 5px;
+    text-align: left;
+}
+
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+/*parte do modal*/
+button {
+    cursor: pointer;
+  }
+  
+  .container {
+    width: 90%;
+    height: 80%;
+    border-radius: 10px;
+    background: white;
+    display: none;
+  }
+  
+  .header {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto 12px;
+  }
+  
+  .header span {
+    font-weight: 900;
+    font-size: 20px;
+    word-break: break-all;
+  }
+  
+  #item, #funcionario {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: rgb(57, 57, 226);
+  }
+  
+  .divTable {
+    padding: 10px;
+    width: auto; 
+    height:inherit; 
+    overflow:auto;
+  }
+  
+  .divTable::-webkit-scrollbar {
+    width: 12px;
+    background-color: whitesmoke; 
+  }
+  
+  .divTable::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: darkgray; 
+  }
+  
+  table {
+    width: 100%;
+    border-spacing: 10px;
+    word-break: break-all;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: whitesmoke;
+  }
+  
+  tr {
+    border-bottom: 1px solid rgb(238, 235, 235)!important;
+  }
+  
+  tbody tr td {
+    vertical-align: text-top;
+    padding: 6px;
+    max-width: 50px;
+  }
+  
+  thead tr th {
+    padding: 5px;
+    text-align: start;
+    margin-bottom: 50px;
+  }
+  
+  tbody tr {
+    margin-bottom: 50px;
+  }
+  
+  thead tr th.acao {
+    width: 100px!important;
+    text-align: center;
+  }
+  
+  tbody tr td.acao {
+    text-align: center;
+  }
+  
+  @media (max-width: 700px) {
+    body {
+      font-size: 10px;
+    }
+    
+    .header span {
+      font-size: 15px;
+    }
+  
+    #new {
+      padding: 5px;
+      font-size: 10px;
+    }
+  
+    thead tr th.acao {
+      width: auto!important;
+    }
+    
+    td button i {
+      font-size: 20px!important;
+    }
+  
+    td button i:first-child {
+      margin-right: 0;
+    }
+  
+    .modal {
+      width: 90%!important;
+    }
+  
+    .modal label {
+      font-size: 12px!important;
+    }
+  }
+  
+  .modal-container, .modal-inten {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    background-color: white;
+    border-radius: 10px;
+    width: 250px;
+  }
+  
+  .modal label {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .modal input, .categoria {
+    width: 100%;
+    outline: none;
+    padding: 5px 10px; 
+    width: 100%;
+    margin-bottom: 20px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+ 
+  
+  .modal button {
+    width: 100%;
+    margin: 10px auto;
+    outline: none;
+    border-radius: 20px; 
+    padding: 5px 10px; 
+    width: 100%;
+    border: none;
+    background-color: rgb(57, 57, 226);
+    color: white;
+  }
+  
+  .active {
+    display: flex;
+  }
+  
+  .active .modal {
+    animation: modal .4s;
+  }
+  
+  @keyframes modal {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -60px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  td button {
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+  
+  td button i {
+    font-size: 25px;
+  }
+  
+  td button i:first-child {
+    margin-right: 10px;
+  }

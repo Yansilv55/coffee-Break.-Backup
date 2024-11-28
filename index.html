@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Coffe-break.css">
+    <link rel="shortcut icon" href="diamante.png.webp" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <title>Diamante Coffee-Break</title>
+</head>
+<body>
+    <div class="main-content">
+        <header>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <h1>Diamante Coffee-Break</h1>
+        </header>
+        
+        <nav class="side-menu" id="sideMenu">
+            <button class="menu-toggle-close" onclick="toggleMenu()">☰</button>
+            <ul>
+                <li><a href="#" onclick="showSection('cadastrar-item')">Item</a></li>
+                <li><a href="#" onclick="showSection('carrinho-certo')">Carrinho</a></li>
+                <li><a href="#" onclick="showSection('user-register')">Usuários</a></li>
+                <button id="logoutButton" onclick="confirmLogout()">Sair</button>
+            </ul>
+        </nav>
+        
+        <div class="container" id="user-register">
+            <div class="header">
+                <span>Cadastro de Funcionários</span>
+                <button onclick="openModal('funcionario')" id="funcionario">Incluir</button>
+            </div>
+        
+            <div class="divTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Senha</th>
+                            <th class="acao">Editar</th>
+                            <th class="acao">Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-funcionario">
+                        <!-- Linhas serão adicionadas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="modal-container" id="modal-funcionario">
+                <div class="modal">
+                    <form id="form-funcionario">
+                        <label for="nome-funcionario">Nome</label>
+                        <input id="nome-funcionario" type="text" required />
+        
+                        <label for="email-funcionario">Email</label>
+                        <input id="email-funcionario" type="email" required />
+        
+                        <label for="password-funcionario">Senha</label>
+                        <input id="password-funcionario" type="password" required />
+        
+                        <button type="submit" id="btnSalvar-funcionario">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        <section class="lista-itens" id="lista-itens">
+            <h2>Fazer pedido</h2>
+            
+            <!-- Barra de busca -->
+            <input type="text" id="searchBar" placeholder="Buscar item..." onkeyup="searchItems()">
+            
+            <!-- Tabela com campos de entrada abaixo dos títulos -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                        <th>Unidade de Medida</th>
+                    </tr>
+                </thead>
+                <tbody id="itemTable">
+                    <tr>
+                        <td data-label="Descrição">
+                            <input type="text" id="descriptionInput" value="tomate" placeholder="Descrição do item" readonly>
+                        </td>
+                        <td data-label="Quantidade">
+                            <input type="number" id="quantityInput" placeholder="Quantidade" min="1" required>
+                        </td>
+                        <td data-label="Unidade de Medida">
+                            <select id="unitSelect" required>
+                                <option value="UNI">UNI</option>
+                                <option value="LT">LT - Litro</option>
+                                <option value="Cx">Cx - Caixa</option>
+                                <option value="Pc">Pc - Pacote</option>
+                            </select>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button class="button-coffe" id="addToCartButton">Adicionar ao Carrinho</button>
+
+            <button class="button-coffe" id="backToCartButton" onclick="showSection('carrinho-certo')">Ver carrinho</button>
+        </section>
+        
+        
+        <section class="carrinho-certo" id="carrinho-certo">
+            <h2>Carrinho</h2>
+        
+            <!-- Tabela onde os produtos adicionados aparecerão -->
+            <table id="cartTable">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Unidade de Medida</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="cartGrid">
+                    <!-- Linhas dinâmicas -->
+                </tbody>
+            </table>
+        
+            <button class="button-coffe" id="addProductButton" onclick="openModal('#addProductModal')">Adicionar Produto</button>
+            <button class="button-coffe" id="finalizeOrderButton">Finalizar Pedido</button>
+        </section>
+        
+        <!-- Modal para Adicionar Produto -->
+        <div class="modal-container" id="addProductModal">
+            <div class="modal">
+                <form id="addProductForm">
+                    <h2>Adicionar Produto</h2>
+                    <label for="productDescription">Descrição</label>
+                    <input type="text" id="productDescription" required />
+        
+                    <label for="productQuantity">Quantidade</label>
+                    <input type="number" id="productQuantity" min="1" required />
+        
+                    <label for="productUnit">Unidade de Medida</label>
+                    <select id="productUnit" required>
+                        <option value="" disabled selected>Selecione</option>
+                        <option value="Unidades">Unidades</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Litros">Litros</option>
+                    </select>
+        
+                    <button type="button" onclick="addProductToCart()">Adicionar</button>
+                    <button type="button" onclick="closeModal('#addProductModal')">Cancelar</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="container" id="cadastrar-item">
+            <div class="header">
+                <span>Cadastro de Itens</span>
+                <button onclick="openModal('item')" id="item">Cadastrar</button>
+            </div>
+        
+            <div class="divTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th class="acao">Editar</th>
+                            <th class="acao">Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-item">
+                        <!-- Linhas serão adicionadas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="modal-container" id="modal-item">
+                <div class="modal">
+                    <form>
+                        <label for="nome-item">Nome</label>
+                        <input id="nome-item" type="text" required />
+        
+                        <label for="categoria-item">Categoria</label>
+                        <select id="categoria-item" name="categoria" required>
+                            <option value="" disabled selected>Selecione uma categoria</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="doces">Doces</option>
+                            <option value="salgados">Salgados</option>
+                        </select>
+        
+                        <button id="btnSalvar-item">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    <script src="Coffe-break.js"></script>
+</body>
+</html>
