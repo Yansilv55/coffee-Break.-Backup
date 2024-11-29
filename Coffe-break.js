@@ -1,16 +1,18 @@
 // Função para exibir uma seção específica
 function showSection(sectionId) {
-    const containers = document.querySelectorAll('section, div.container');
-    containers.forEach(container => {
-        container.style.display = 'none'; 
+    // Seleciona todas as seções e esconde todas
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'none';  // Esconde todas as seções
     });
 
-    const targetContainer = document.getElementById(sectionId);
-    if (targetContainer) {
-        targetContainer.style.display = 'block';  
+    // Exibe a seção que foi clicada
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';  // Exibe a seção desejada
     }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Executa quando o DOM estiver completamente carregado
 document.addEventListener('DOMContentLoaded', () => {
     const sideMenu = document.getElementById('sideMenu');
@@ -18,24 +20,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const addProductButton = document.getElementById('addProductButton');
     const logoutButton = document.getElementById('logoutButton');
 
-    showSection('carrinho-certo');
+    // Exibe a seção Carrinho no início da página
+    showSection('carrinho-certo');  // Exibe a seção de Carrinho inicialmente
 
+    // Alterna o menu lateral
     window.toggleMenu = function () {
         sideMenu.classList.toggle('open');
     };
 
+    // Fecha o menu ao clicar fora dele
     document.addEventListener('click', (event) => {
         if (!sideMenu.contains(event.target) && !event.target.closest('.menu-toggle') && sideMenu.classList.contains('open')) {
             sideMenu.classList.remove('open');
         }
     });
 
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            window.location.href = 'login.html';
+    // Adiciona evento aos botões com a classe "button-coffe" para exibir notificação
+    document.querySelectorAll('.button-coffe').forEach(button => {
+        button.addEventListener('click', () => {
+            showNotification("Adicionado com sucesso!");
+        });
+    });
+
+    // Botão "Adicionar Produto" - exibe a seção "Fazer Pedido"
+    if (addProductButton) {
+        addProductButton.addEventListener('click', () => {
+            showSection('lista-itens');  // Exibe a lista de itens (Fazer Pedido)
+            showNotification("Adicionado com sucesso!");
         });
     }
 
+    // Evento para o botão "Sair"
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = 'login.html';  // Redireciona para a página de login
+        });
+    }
+
+    // Evento do formulário de login
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    // Inicializa os itens de funcionários e produtos
     loadItens('funcionario');
     loadItens('item');
 });
@@ -51,129 +78,39 @@ function showNotification(message) {
         notification.remove();
     }, 3000);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
-// Evento do formulário de login
-// Evento do formulário de login
-if (loginForm) {
-    loginForm.addEventListener('submit', async function (event) {
-        event.preventDefault(); // Evitar o recarregamento da página ao submeter o formulário
 
-        // Coletar os dados do formulário
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+// Função para gerenciar o login
+document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Evita o envio padrão do formulário
 
-        const loginData = { email, password };
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        try {
-            // Fazendo a requisição para o endpoint de login
-            const response = await fetch('https://127.0.0.1:7073/employees/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(loginData)
-            });
+    try {
+        const response = await fetch('https://localhost:7073/employees/login', { // Substitua pelo URL da sua API
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-            if (response.ok) {
-                // Login bem-sucedido
-                const data = await response.json();
-                //alert("Login realizado com sucesso!");
-                window.location.href = 'index.html'; // Redirecionar para a página inicial
-            } else if (response.status === 400) {
-                // Credenciais inválidas
-                const error = await response.json();
-                alert(error.message || "Email ou senha inválidos.");
-            } else {
-                // Outros erros
-                alert("Erro inesperado. Tente novamente mais tarde.");
-            }
-        } catch (err) {
-            // Erro de conexão ou outro problema inesperado
-            alert("Erro ao se conectar ao servidor. Tente novamente mais tarde.");
-            console.error(err);
+        if (response.ok) {
+            const result = await response.json();
+            //alert('Login bem-sucedido!');
+            window.location.href = 'index.html';
+            // Redirecione ou armazene o token, se necessário
+        } else {
+            const error = await response.text();
+            alert(`Erro: ${error}`);
         }
-    });
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// Aguardar o carregamento completo do DOM
-document.addEventListener("DOMContentLoaded", function () {
-    // Adiciona o evento de envio do formulário
-    document.querySelector("#form-funcionario").addEventListener("submit", async function (event) {
-        event.preventDefault();  // Impede o envio padrão do formulário
-
-        // Coleta os dados do formulário
-        const userData = {
-            name: document.getElementById("nome-funcionario").value.trim(),
-            email: document.getElementById("email-funcionario").value.trim(),
-            password: document.getElementById("password-funcionario").value.trim(),
-            EmployeeCode: "005"  // Código do funcionário (ajustar conforme necessário)
-        };
-
-        // Validação dos campos
-        if (!userData.name || !userData.email || !userData.password) {
-            alert("Todos os campos são obrigatórios.");
-            return;
-        }
-
-        try {
-            // Requisição POST para a API
-            const response = await fetch("https://127.0.0.1:7073/employees", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userData)
-            });
-
-            if (response.ok) {
-                // Cadastro bem-sucedido
-                alert("Funcionário cadastrado com sucesso!");
-                document.querySelector("#form-funcionario").reset();  // Limpa o formulário
-                closeModal('modal-funcionario');  // Fecha o modal após o cadastro
-                addFuncionarioToTable(userData);  // Adiciona à tabela
-            } else {
-                // Erros retornados pela API
-                const errorData = await response.json();
-                if (errorData.errors) {
-                    const errorMessages = Object.values(errorData.errors).flat().join("\n");
-                    alert(`Erros: \n${errorMessages}`);
-                } else {
-                    alert(errorData.title || "Erro ao cadastrar o funcionário.");
-                }
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Erro ao conectar ao servidor. Verifique a conexão.");
-        }
-    });
+    } catch (err) {
+        console.error('Erro ao fazer login:', err);
+        alert('Erro ao conectar-se à API.');
+    }
 });
 
-// Função para adicionar o funcionário à tabela
-function addFuncionarioToTable(funcionario) {
-    const tableBody = document.getElementById("tbody-funcionario");
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-        <td>${funcionario.name}</td>
-        <td>${funcionario.email}</td>
-        <td>********</td> <!-- Não exibe a senha -->
-        <td><button onclick="editFuncionario(${funcionario.EmployeeCode})">Editar</button></td>
-        <td><button onclick="deleteFuncionario(${funcionario.EmployeeCode})">Excluir</button></td>
-    `;
-    tableBody.appendChild(row);
-}
-
-// Função para fechar o modal
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.style.display = "none";  // Fecha o modal
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Gerenciamento de itens genérico
+// Função para gerenciar itens (funcionário, produto, etc.)
 function openModal(type, edit = false, index = 0) {
     const modal = document.getElementById(`modal-${type}`);
     const sNome = document.getElementById(`nome-${type}`);
@@ -198,7 +135,7 @@ function openModal(type, edit = false, index = 0) {
         if (sSenha) sSenha.value = '';
     }
 }
-////////////////////////////////////////////////////////////////////////////////////
+
 function saveItem(type) {
     const sNome = document.getElementById(`nome-${type}`);
     const sEmailOrCategoria = document.getElementById(`${type === 'funcionario' ? 'email' : 'categoria'}-${type}`);
@@ -252,6 +189,6 @@ function insertItem(item, index, type) {
     tbody.appendChild(tr);
 }
 
+// Exemplo de chamada para abrir uma seção com 'Fazer Pedido'
 document.getElementById('btnSalvar-funcionario').onclick = () => saveItem('funcionario');
 document.getElementById('btnSalvar-item').onclick = () => saveItem('item');
-///////////////////////////////////////////////////////////////////////////////////////////
