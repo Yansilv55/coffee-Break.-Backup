@@ -28,8 +28,9 @@
         <div class="container" id="user-register">
             <div class="header">
                 <span>Cadastro de Funcionários</span>
-                <button onclick="openModal('funcionario')" id="funcionario">Incluir</button>
+                <button onclick="openModal('funcionario')" id="funcionario">Cadastro</button>
             </div>
+            <input type="search" name="buscar-funcionario" id="buscar-funcionario" placeholder="Pesquisar">
         
             <div class="divTable">
                 <table>
@@ -42,9 +43,7 @@
                             <th class="acao">Excluir</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-funcionario">
-                        <!-- Linhas serão adicionadas aqui -->
-                    </tbody>
+                    <tbody id="tbody-funcionario"></tbody>
                 </table>
             </div>
         
@@ -53,17 +52,18 @@
                     <form id="form-funcionario">
                         <label for="nome-funcionario">Nome</label>
                         <input id="nome-funcionario" type="text" required />
-        
+            
                         <label for="email-funcionario">Email</label>
                         <input id="email-funcionario" type="email" required />
-        
+            
                         <label for="password-funcionario">Senha</label>
                         <input id="password-funcionario" type="password" required />
-        
+            
                         <button type="submit" id="btnSalvar-funcionario">Salvar</button>
                     </form>
                 </div>
             </div>
+            
         </div>
         
         
@@ -161,7 +161,7 @@
                 <span>Cadastro de Itens</span>
                 <button onclick="openModal('item')" id="item">Cadastrar</button>
             </div>
-        
+            <input type="search" name="buscar-item" id="buscar-item" placeholder="Pesquisar">
             <div class="divTable">
                 <table>
                     <thead>

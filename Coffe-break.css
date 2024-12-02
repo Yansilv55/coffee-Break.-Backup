@@ -827,3 +827,9 @@ button {
   td button i:first-child {
     margin-right: 10px;
   }
+
+  #buscar-item, #buscar-funcionario {
+    width: 500px;
+    height: 25px;
+    margin-left: 15px;
+  }
