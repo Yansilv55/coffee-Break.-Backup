@@ -1,3 +1,42 @@
+
+
+
+async function excluirFuncionario(id) {
+    if (!confirm("Tem certeza que deseja excluir este funcionário?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://localhost:7073/employees/${id}`, {
+            method: 'DELETE',
+        });
+        
+        if (response.ok) {
+            alert("Funcionário excluído com sucesso.");
+            carregarFuncionarios(); 
+        } else if (response.status === 404) {
+            alert("Funcionário não encontrado.");
+        } else {
+            const errorText = await response.text();
+            console.error("Erro ao excluir funcionário:", errorText);
+            alert("Erro ao excluir o funcionário. Verifique o servidor.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar à API:", error);
+        alert("Erro ao conectar à API. Verifique a URL e o servidor.");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 // Função para pesquisar funcionários
 async function pesquisarFuncionario() {
     const searchInput = document.getElementById('buscar-funcionario').value.trim().toLowerCase();
@@ -90,6 +129,16 @@ async function carregarFuncionarios() {
                 `;
                 tbody.appendChild(tr);
             });
+
+            document.querySelectorAll('.btn-editar').forEach(btn => {
+                btn.addEventListener('click', () => editarFuncionario(btn.dataset.id));
+            });
+
+            document.querySelectorAll('.btn-excluir').forEach(btn => {
+                btn.addEventListener('click', () => excluirFuncionario(btn.dataset.id));
+            });
+
+
         } else {
             console.error("Erro ao buscar dados. Status:", response.status);
             const errorText = await response.text();
@@ -291,7 +340,7 @@ function openModal(type, edit = false, index = 0) {
     const sNome = document.getElementById(`nome-${type}`);
     const sEmailOrCategoria = document.getElementById(`${type === 'funcionario' ? 'email' : 'categoria'}-${type}`);
     const sSenha = type === 'funcionario' ? document.getElementById('password-funcionario') : null;
-
+    
     modal.classList.add('active');
     modal.onclick = e => {
         if (e.target.className.includes('modal-container')) {
@@ -367,7 +416,6 @@ function insertItem(item, index, type) {
 // Exemplo de chamada para abrir uma seção com 'Fazer Pedido'
 document.getElementById('btnSalvar-funcionario').onclick = () => saveItem('funcionario');
 document.getElementById('btnSalvar-item').onclick = () => saveItem('item');
-
 
 
 
