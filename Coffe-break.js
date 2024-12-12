@@ -1,3 +1,201 @@
+async function pesquisarProduto() {
+    const searchInput = document.getElementById('buscar-item').value.trim().toLowerCase();
+
+    try {
+        console.log("Pesquisando Produtos com:", searchInput);
+
+        const response = await fetch('https://localhost:7073/product');
+        if (response.ok) {
+            const Produtos = await response.json();
+
+            const tbody = document.getElementById('tbody-item');
+            if (!tbody) {
+                console.error("Elemento tbody não encontrado.");
+                return;
+            }
+
+            tbody.innerHTML = ''; // Limpa a tabela antes de exibir os resultados
+
+            // Filtra os funcionários com base no termo de pesquisa
+            const resultados = Produtos.filter(produto =>
+                produto.nome_produto.toLowerCase().includes(searchInput) ||
+                produto.categoria_produto.toLowerCase().includes(searchInput)
+            );
+
+            if (resultados.length > 0) {
+                // Renderiza os funcionários filtrados
+                resultados.forEach(produto => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${produto.nome_produto}</td>
+                        <td>${produto.categoria_produto}</td>
+                        <td><button onclick="editarProduto('${produto.id}')">Editar</button></td>
+                        <td><button onclick="excluirProduto('${produto.id}')">Excluir</button></td>
+                        `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="5">Nenhum funcionário encontrado.</td>`;
+                tbody.appendChild(tr);
+            }
+        } else {
+            console.error("Erro ao buscar dados. Status:", response.status);
+            alert("Erro ao buscar os funcionários. Verifique o servidor.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar à API:", error);
+        alert("Erro ao conectar à API. Verifique a URL e o servidor.");
+    }
+}
+
+// Adiciona o evento ao campo de busca
+document.getElementById('buscar-item').addEventListener('input', pesquisarProduto);
+
+
+
+
+
+
+
+async function excluirProduto(id) {
+    if (!confirm("Tem certeza que deseja excluir este Produto?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://localhost:7073/product/${id}`, {
+            method: 'DELETE',
+        });
+        
+        if (response.ok) {
+            alert("Produto excluído com sucesso.");
+            carregarProduto(); 
+        } else if (response.status === 404) {
+            alert("Produto não encontrado.");
+        } else {
+            const errorText = await response.text();
+            console.error("Erro ao excluir Produto:", errorText);
+            alert("Erro ao excluir o Produto. Verifique o servidor.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar à API:", error);
+        alert("Erro ao conectar à API. Verifique a URL e o servidor.");
+    }
+}
+
+
+
+
+
+async function carregarProduto() {
+    try {
+        console.log("Iniciando a requisição para carregar Produtos...");
+        const response = await fetch('https://localhost:7073/product');
+        console.log("Resposta da requisição:", response);
+
+        if (response.ok) {
+            const Produtos = await response.json();
+            console.log("Produtos recebidos:", Produtos);
+
+            const tbody = document.getElementById('tbody-item');
+            if (!tbody) {
+                console.error("Elemento tbody não encontrado.");
+                return;
+            }
+
+            tbody.innerHTML = '';
+            Produtos.forEach(produto => {
+                console.log("Produto recebido:", produto);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${produto.nome_produto}</td>
+                    <td>${produto.categoria_produto}</td>
+                    <td><button onclick="editarProduto('${produto.id}')">Editar</button></td>
+                    <td><button onclick="excluirProduto('${produto.id}')">Excluir</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+        } else {
+            console.error("Erro ao buscar dados. Status:", response.status);
+            const errorText = await response.text();
+            console.error("Mensagem de erro:", errorText);
+            alert("Erro ao carregar os Produtos. Verifique o servidor.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar à API:", error);
+        alert("Erro ao conectar à API. Verifique a URL e o servidor.");
+    }
+}
+document.addEventListener('DOMContentLoaded', carregarProduto);
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const formItem = document.getElementById("form-item");
+
+    if (!formItem) {
+        console.error("O formulário de item não foi encontrado.");
+        return;
+    }
+
+    formItem.addEventListener("submit", async function (event) {
+        event.preventDefault(); // Evita o recarregamento da página
+
+        // Coletar os dados do formulário
+        const itemData = {
+            Nome_produto: document.getElementById("nome-item")?.value.trim() || "",
+            categoria_produto: document.getElementById("categoria-item")?.value.trim() || ""
+        };
+
+        // Validar os campos obrigatórios
+        if (!itemData.Nome_produto || !itemData.categoria_produto) {
+            alert("Todos os campos são obrigatórios.");
+            return;
+        }
+
+        try {
+            console.log(JSON.stringify(itemData));
+            // Fazer a requisição para a API
+              const response = await fetch('https://localhost:7073/product', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(itemData)
+            });
+
+            if (response.ok) {
+                alert("Produto cadastrado com sucesso!");
+                formItem.reset(); 
+                // Atualizar a tabela de itens (se necessário)
+                carregarProduto(); // Descomente se houver essa função
+            } else {
+                // Tratar erros da API
+                const errorData = await response.json();
+                const errorMessages = errorData.errors
+                    ? Object.values(errorData.errors).flat().join("\n")
+                    : errorData.title || "Erro ao cadastrar o Produto.";
+                alert(`Erros: \n${errorMessages}`);
+            }
+        } catch (error) {
+            console.error("Erro ao conectar ao servidor:", error);
+            alert("Erro ao conectar ao servidor. Verifique a conexão.");
+        }
+    });
+});
+
+
+
+
+
+
+
+
 
 
 
@@ -26,16 +224,6 @@ async function excluirFuncionario(id) {
         alert("Erro ao conectar à API. Verifique a URL e o servidor.");
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 // Função para pesquisar funcionários
 async function pesquisarFuncionario() {
@@ -72,7 +260,7 @@ async function pesquisarFuncionario() {
                         <td>*****</td>
                         <td><button onclick="editarFuncionario('${funcionario.id}')">Editar</button></td>
                         <td><button onclick="excluirFuncionario('${funcionario.id}')">Excluir</button></td>
-                    `;
+                        `;
                     tbody.appendChild(tr);
                 });
             } else {
@@ -95,10 +283,6 @@ document.getElementById('buscar-funcionario').addEventListener('input', pesquisa
 
 
 
-
-
-
-
 //  mostrar na tabela
 
 async function carregarFuncionarios() {
@@ -106,7 +290,7 @@ async function carregarFuncionarios() {
         console.log("Iniciando a requisição para carregar funcionários...");
         const response = await fetch('https://localhost:7073/employees?page=1&rows=100');
         console.log("Resposta da requisição:", response);
-
+        
         if (response.ok) {
             const funcionarios = await response.json();
             console.log("Funcionários recebidos:", funcionarios);
@@ -166,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     formFuncionario.addEventListener("submit", async function (event) {
         event.preventDefault(); // Evita o recarregamento da página
-
+        
         // Coletar os dados do formulário
         const userData = {
             name: document.getElementById("nome-funcionario").value.trim(),
@@ -437,3 +621,36 @@ document.getElementById('btnSalvar-item').onclick = () => saveItem('item');
 
 
 
+
+
+async function editarFuncionario(id) {
+    try {
+        const response = await fetch(`https://localhost:7073/employees/${id}`, {
+            method: 'PUT',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.status}`);
+        }
+
+        const data = await response.text(); // Pegue a resposta como texto para depuração
+
+        if (!data) {
+            throw new Error('Resposta vazia da API');
+        }
+
+        const funcionario = JSON.parse(data); // Parse manual para detectar erro antes de acessar os dados
+
+        // Preencher os campos do modal com os dados
+        document.getElementById('funcionario-id').value = funcionario.id;
+        document.getElementById('nome').value = funcionario.userName;
+        document.getElementById('email').value = funcionario.email;
+        document.getElementById('senha').value = '';  // Não mostrar a senha atual
+
+        // Mostrar o modal de edição
+        document.getElementById('modal-editar').style.display = 'block';
+    } catch (error) {
+        console.error('Erro ao carregar dados do funcionário:', error);
+        alert('Erro ao carregar dados do funcionário.');
+    }
+}
